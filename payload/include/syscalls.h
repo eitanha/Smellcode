@@ -27,7 +27,7 @@ static inline long raw_syscall(
     __asm__ volatile (
         "syscall"
         : "=a"(ret)
-        :  "a"(number), "D"(a1), "S"(a2), "d"(a3), "r"(r10), "r"(r8), "r"(r9)
+        :  "r"(rax), "r"(rdi), "r"(rsi), "r"(rdx), "r"(r10), "r"(r8), "r"(r9)
         : "rcx", "r11", "memory"
     );
     

@@ -17,15 +17,23 @@ LOADER_OBJS := $(LOADER_SRCS:$(LOADER_SRCDIR)/%.c=$(LOADER_OBJDIR)/%.o)
 
 SC_ELF := $(BINDIR)/shellcode.elf
 SC_BIN := $(BINDIR)/shellcode.bin
+SC_RECOVERY_ELF := $(BINDIR)/shellcode_with_recovery.elf
+SC_RECOVERY_BIN := $(BINDIR)/shellcode_with_recovery.bin
 LOADER_BIN := $(BINDIR)/loader
 
-all: $(SC_BIN) $(LOADER_BIN)
+all: $(SC_BIN) $(SC_RECOVERY_BIN) $(LOADER_BIN)
 
 $(SC_BIN): $(SC_ELF)
 	objcopy -O binary --only-section=.sc $(SC_ELF) $(SC_BIN)
 
 $(SC_ELF): $(SC_OBJS) | $(BINDIR)
 	$(CC) $(SC_LDFLAGS) -o $@ $(SC_OBJS)
+
+$(SC_RECOVERY_BIN): $(SC_RECOVERY_ELF)
+	objcopy -O binary --only-section=.sc $(SC_RECOVERY_ELF) $(SC_RECOVERY_BIN)
+
+$(SC_RECOVERY_ELF): $(SC_OBJS) | $(BINDIR)
+	$(CC) $(SC_LDFLAGS) -Wl,-e,main_with_recovery -o $@ $(SC_OBJS)
 
 $(SC_OBJDIR)/%.o: $(SC_SRCDIR)/%.c | $(SC_OBJDIR)
 	$(CC) $(SC_CFLAGS) -c $< -o $@
@@ -39,7 +47,6 @@ $(LOADER_OBJDIR)/%.o: $(LOADER_SRCDIR)/%.c | $(LOADER_OBJDIR)
 $(BINDIR) $(SC_OBJDIR) $(LOADER_OBJDIR):
 	mkdir -p $@
 	
-
 clean:
 	rm -rf build
 
