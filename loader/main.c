@@ -19,7 +19,7 @@ int main(int argc, char ** argv) {
     }
     
     size_t shellcode_size = (size_t)shellcode_stat.st_size;
-    void* shellcode_buffer = (int (*)())mmap(
+    void* shellcode_buffer = mmap(
         NULL,
         shellcode_size,
         PROT_READ | PROT_WRITE | PROT_EXEC,
@@ -27,7 +27,7 @@ int main(int argc, char ** argv) {
         shellcode_fd, 0
     );
 
-    if (shellcode_buffer == (int (*)())MAP_FAILED) {
+    if (shellcode_buffer == MAP_FAILED) {
         return 1;
     }
 
