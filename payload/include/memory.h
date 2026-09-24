@@ -1,0 +1,4 @@
+#ifndef SMELLCODE_MEMORY_H
+#define SMELLCODE_MEMORY_H
+
+#endif
